@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ESP32 LED Control</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        button {
+            padding: 15px 40px;
+            margin: 10px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>ESP32 LED Control</h1>
+
+    <button onclick="turnOn()">LED ON</button>
+    <button onclick="turnOff()">LED OFF</button>
+
+    <h2 id="status">LED Status: OFF</h2>
+
+    <script type="module">
+
+        import {
+            initializeApp
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+        import {
+            getDatabase,
+            ref,
+            set,
+            onValue
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+
+const firebaseConfig = {
+
+  apiKey: "AIzaSyC5kbu6hPdb0hOJTvu_OSNWTyJWKCrYhXg",
+
+  authDomain: "ledonoff-39406.firebaseapp.com",
+
+  databaseURL: "https://ledonoff-39406-default-rtdb.asia-southeast1.firebasedatabase.app",
+
+  projectId: "ledonoff-39406",
+
+  storageBucket: "ledonoff-39406.firebasestorage.app",
+
+  messagingSenderId: "209712226895",
+
+  appId: "1:209712226895:web:1bd4b6f49bc0db2ca0003a"
+
+}; 
+
+
+        const app = initializeApp(firebaseConfig);
+
+        const database = getDatabase(app);
+
+        const ledRef = ref(database, "LED");
+
+
+        window.turnOn = function()
+        {
+            set(ledRef, true);
+        };
+
+
+        window.turnOff = function()
+        {
+            set(ledRef, false);
+        };
+
+
+        onValue(ledRef, (snapshot) =>
+        {
+            const state = snapshot.val();
+
+            document.getElementById("status").innerText =
+                "LED Status: " + (state ? "ON" : "OFF");
+        });
+
+    </script>
+
+</body>
+</html>
